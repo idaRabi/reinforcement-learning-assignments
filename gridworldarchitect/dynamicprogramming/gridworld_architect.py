@@ -53,6 +53,11 @@ import gymnasium as gym
 from gymnasium import spaces
 from typing import Optional, List, Tuple
 
+from gridworldarchitect.dynamicprogramming.policyiteration.policy_iteration_grid_architect import \
+    PolicyIterationGridArchitect
+
+from gridworldarchitect.dynamicprogramming.policyiteration.gemini_policy_iteration_grid_achitec import \
+    PolicyIterationGridArchitect2
 
 # Cell type constants
 EMPTY  = 0
@@ -452,7 +457,7 @@ gym.register(
 # Quick demo (run this file directly)
 # ════════════════════════════════════════════════════════════════════════
 
-if __name__ == "__main__":
+def demo():
     print("=" * 60)
     print("  Gridworld Architect — Environment Demo")
     print("=" * 60)
@@ -484,6 +489,7 @@ if __name__ == "__main__":
     print("=" * 60)
     env.print_transition_table(state=0)
 
+if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("  Custom map example (7×7 with extra pits)")
     print("=" * 60)
@@ -497,6 +503,26 @@ if __name__ == "__main__":
         [0, 1, 0, 0, 0, 1, 4],
         [0, 0, 0, 1, 0, 0, 3],
     ]
-    env2 = GridworldArchitectEnv(grid_map=custom_map, render_mode="human", stochastic=True)
-    env2.reset()
+
+    # env2 = GridworldArchitectEnv(grid_map=custom_map, render_mode="human", stochastic=True)
+    env2 = GridworldArchitectEnv(render_mode="human", stochastic=True)
+    state, info = env2.reset()
     print(f"Custom env — {env2.n_rows}×{env2.n_cols} grid, stochastic=True")
+    env2.print_transition_table(0)
+    agent = PolicyIterationGridArchitect(env2)
+    print("\nTraining agent with Policy Iteration...")
+    agent.train()
+    print("\nLearned policy (state → action):")
+    truncated, terminated = False, False
+    step = 0
+    while not (terminated or truncated):
+        action = agent.play(state)
+        print(f"\n─── Step {step + 1}: Action = {ACTION_NAMES[action]} ───")
+        state, reward, terminated, truncated, info = env2.step(action)
+        print(f"Reward={reward:+.1f}  Terminated={terminated}  Truncated={truncated}")
+        if terminated or truncated:
+            print("\nEpisode finished!")
+            break
+        env2.render()
+        print("//" * 30)
+        step += 1
