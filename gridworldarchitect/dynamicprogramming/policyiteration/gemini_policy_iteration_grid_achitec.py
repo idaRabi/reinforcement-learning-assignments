@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class PolicyIterationGridArchitect2:
+class PolicyIterationGridArchitectByGemini:
     def __init__(self, env):
         self.env = env
         self.P = env.P

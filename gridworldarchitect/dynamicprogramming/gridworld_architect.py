@@ -57,7 +57,10 @@ from gridworldarchitect.dynamicprogramming.policyiteration.policy_iteration_grid
     PolicyIterationGridArchitect
 
 from gridworldarchitect.dynamicprogramming.policyiteration.gemini_policy_iteration_grid_achitec import \
-    PolicyIterationGridArchitect2
+    PolicyIterationGridArchitectByGemini
+
+from gridworldarchitect.dynamicprogramming.valueiteration.value_iteration_grid_architect import \
+    ValueIterationGridArchitect
 
 # Cell type constants
 EMPTY  = 0
@@ -509,7 +512,8 @@ if __name__ == "__main__":
     state, info = env2.reset()
     print(f"Custom env — {env2.n_rows}×{env2.n_cols} grid, stochastic=True")
     env2.print_transition_table(0)
-    agent = PolicyIterationGridArchitect(env2)
+    # agent = PolicyIterationGridArchitect(env2)
+    agent = ValueIterationGridArchitect(env2)
     print("\nTraining agent with Policy Iteration...")
     agent.train()
     print("\nLearned policy (state → action):")
